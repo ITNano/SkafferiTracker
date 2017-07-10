@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<% if(messages.msg){ %>
+				<div><%= messages.msg %></div>
+			<% } %>
+			<% if(messages.dabaslink){ %>
+				<div><a href = "<%= messages.dabaslink %>">Link to dabas json</a></div>
+			<% } %>
+			<form action = "#" method = "POST">
+				<input type = "text" name = "barcode" placeholder = "Barcode" autofocus><br>
+				<input type = "submit" value = "Test it">
+			</form>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>

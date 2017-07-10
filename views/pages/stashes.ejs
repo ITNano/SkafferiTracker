@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<a href = "/places/<%= place %>/add">
+				<div id = "addButton" class = "button round clickable">
+					+
+				</div>
+			</a>
+			<h2>
+				Stashes @ <%= place %>
+			</h2>
+			
+			<% stashes.forEach(function(stash){ %>
+				<a href = "/places/<%= place %>/<%= stash.name %>">
+					<div class = "stashWrapper iconWrapper clickable">
+						<img src = "<%= stash.img %>">
+						<div class = "name"><%= stash.name %></div>
+					</div>
+				</a>
+			<% }); %>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,84 @@
+<h2 class = "center">
+	Add/Remove items
+</h2>
+<% if(messages.error){ %>
+	<div class = "message error">
+		<%= messages.error %>
+	</div>
+<% } %>
+<% if(messages.msg){ %>
+	<div class = "message success">
+		<%= messages.msg %>
+	</div>
+<% } %>
+<div class = "center">
+	<form action = "#" method = "POST">
+		<div>
+			<label class="radiobutton">
+				<input type="radio" name="action" value="add" checked><span class = "green">Add</span>
+			</label>
+			<label class="radiobutton">
+				<input type="radio" name="action" value="remove"><span class = "red">Remove</span>
+			</label>
+		</div>
+		<div>
+			<label class="radiobutton small">
+				<input type="radio" name="inputtype" value="barcode" onchange = "setInputMethod('barcode');" checked><span class = "blueish">Barcode</span>
+			</label>
+			<label class="radiobutton small">
+				<input type="radio" name="inputtype" value="manual" onchange = "setInputMethod('manual');" ><span class = "yellow">Manual</span>
+			</label>
+		</div>
+		<div id = "eventinputs">
+			<div id = "barcodeinput">
+				<input type = "text" name = "barcode" placeholder = "Barcode" autofocus>
+			</div>
+			<div id = "manualinput">
+				<input type = "text" name = "manualbarcode" placeholder = "Barcode"><br>
+				<input type = "text" name = "product" placeholder = "Product, e.g. Milk"><br>
+				<input type = "text" name = "manufacturer" placeholder = "Manufacturer, e.g. Arla"><br>
+				<input type = "number" class = "large" min = "1" step = "any" name = "size" placeholder = "size">
+				<select name = "unit">
+					<option value = "g">gram</option>
+					<option value = "st">st</option>
+					<option value = "kg">kg</option>
+					<option value = "liter">liter</option>
+				</select>
+			</div>
+		</div>
+		Quantity: <input type = "number" name = "amount" min = "1" placeholder = "Amount" value = "1">
+		<br>
+		<input type = "submit" value = "Submit" disabled>
+	</form>
+</div>
+
+<script type = "text/javascript">
+	$('input').change(updateSubmitAvailability);
+	$('input[type=text]').keyup(updateSubmitAvailability);
+	$('input[type=number]').keyup(updateSubmitAvailability);
+
+	setInputMethod("barcode");
+	function setInputMethod(method){
+		$("#eventinputs").children().hide();
+		$("#"+method+"input").show();
+	}
+	
+	function updateSubmitAvailability(){
+		if(checkValid()){
+			$('input[type=submit]').removeAttr('disabled');
+		}else{
+			$('input[type=submit]').attr('disabled', 'true');
+		}
+	}
+	
+	function checkValid(){
+		var mode = $('input[name=inputtype]:checked').val();
+		if(mode == 'barcode'){
+			return $('input[name=barcode]').val().length > 4;
+		}else if(mode == 'manual'){
+			return $('input[name=product]').val().length > 0 &&
+				   $('input[name=manufacturer]').val().length > 0 &&
+				   $('input[name=size]').val() > 0;
+		}
+	}
+</script>

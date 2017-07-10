@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<h2>
+				Items @ <%= stash %> (<%= place %>)
+			</h2>
+			
+			<table>
+				<tr>
+					<th> Amount </th>
+					<th> Name </th>
+					<th> Expiration date </th>
+				</tr>
+				<% items.forEach(function(item){ %>
+					<tr>
+						<td><%= item.amount %> <%= item.unit %></td>
+						<td><%= item.product %> <% if(item.manufacturer){ %>(<%= item.manufacturer %>) <% } %></td>
+						<td>Unknown</td>
+				<% }); %>
+			</table>
+			
+			<div id = "addEvent">
+				<% include ../partials/event.ejs %>
+			</div>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>
