@@ -144,13 +144,19 @@ function getDataFromWeb(url, callback){
 }
 
 function setSizeAndUnit(container, data){
-	console.log('getting : '+data);
 	const matches = data.match(/\d+(\.?\d+)?/);
 	if(matches){
 		container.size = matches[0];
-		container.unit = data.replace(container.size, '').trim();
+		container.unit = normalizeUnit(data.replace(container.size, '').trim());
+	}
+}
+
+function normalizeUnit(unit){
+	var mappings = {"l": "liter", "deciliter": "dl", "kilogram": "kg", "gram": "g", "styck": "st", "stycken": "st"};
+	if(mappings[unit]){
+		return mappings[unit];
 	}else{
-		console.log('found no match');
+		return unit;
 	}
 }
 
