@@ -12,7 +12,15 @@ exports.getAvailableStashes = function(place, callback){
 };
 
 exports.getAvailableItems = function(place, stash, callback){
-	db.query("SELECT I.product AS product, I.manufacturer AS manufacturer, I.unit AS unit, SUM(I.size*IF(E.action = 'add', E.amount, -E.amount)) AS amount FROM events E LEFT JOIN items I ON I.id = E.item_id LEFT JOIN places P ON P.name = ? LEFT JOIN stashes S ON S.name = ? AND S.place_id = P.id GROUP BY I.id", [place, stash], callback);
+	db.query("SELECT I.product AS product, I.manufacturer AS manufacturer, I.unit AS unit, SUM(I.size*IF(E.action = 'add', E.amount, -E.amount)) AS amount FROM events E LEFT JOIN items I ON I.id = E.item_id LEFT JOIN places P ON P.name = ? LEFT JOIN stashes S ON S.name = ? AND S.place_id = P.id WHERE E.stash_id = S.id GROUP BY I.id", [place, stash], callback);
+};
+
+exports.addPlace = function(name, imgPath, callback){
+	db.query("INSERT INTO places (id, name, img) VALUES (NULL, ?, ?)", [name, imgPath], callback);
+};
+
+exports.addStash = function(place, name, imgPath, callback){
+	db.query("INSERT INTO stashes (id, place_id, name, img) VALUES (NULL, (SELECT id FROM places WHERE name = ? LIMIT 1), ?, ?)", [place, name, imgPath], callback);
 };
 
 exports.addEventByBarcode = function(place, stash, action, barcode, amount, callback){

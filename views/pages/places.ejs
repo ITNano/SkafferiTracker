@@ -8,11 +8,9 @@
 		</header>
 		
 		<main>
-			<a href = "/places/add">
-				<div id = "addButton" class = "button round clickable">
-					+
-				</div>
-			</a>
+			<div id = "addButton" class = "button round clickable" onClick = "$('#addPlace').toggle();$(this).html($(this).html()=='&#10005;'?'+':'&#10005;');">
+				+
+			</div>
 			
 			<% places.forEach(function(place){ %>
 				<a href = "/places/<%= place.name %>">
@@ -22,6 +20,10 @@
 					</div>
 				</a>
 			<% }); %>
+			
+			<div id = "addPlace" class = "addwindow hiddenwindow">
+				<% include ../partials/addplace.ejs %>
+			</div>
 		</main>
 		
 		<footer>

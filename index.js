@@ -1,13 +1,16 @@
 var express = require('express'), http = require('http');
 var app = express();
 var httpServer = http.createServer(app);
-var api = require('./skafferi');
 
-var bodyParser = require('body-parser')
-//app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-})); 
+var api = require('./skafferi');
+var crypto = require("crypto"), fs = require('fs');
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+var multer = require('multer');
+var upload = multer({ dest:'public/uploads/' });
+app.use(upload.any());
 
 var flash = require('express-flash'), cookieParser = require('cookie-parser'), session = require('express-session');
 app.use(cookieParser('keyboard cat'));
@@ -17,42 +20,52 @@ app.use(flash());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
+/* Places */
 app.get('/', function(req, res, next){ res.redirect('/places'); });
 app.get('/places', function(req, res, next){
 	api.getAvailablePlaces(function(places){
 		res.render('pages/places', {title: 'Select place', places:places});
 	});
 });
-app.get('/places/add', function(req, res, next){
-res.render('pages/addplace', {title: 'Add place'});
-});
-app.post('/places/add', function(req, res, next){
-	api.addPlace(req.params.name, function(result){
-		res.sendStatus(!result.error?200:406);		// HTTP 200: OK or 406: Not acceptable
-	});
-});
-app.get('/places/:place', function(req, res, next){
-	api.getAvailableStashes(req.params.place, function(stashes){
-		res.render('pages/stashes', {title: 'Select stash', place: req.params.place, stashes: stashes});
-	});
-});
-app.get('/places/:place/add', function(req, res, next){
-	res.render('pages/addstash', {title: 'Add stash', place: req.params.place});
-});
-app.post('/places/:place/add', function(req, res, next){
-	api.addStash(req.params.place, req.params.name, function(result){
-		res.sendStatus(!result.error?200:406);		// HTTP 200: OK or 406: Not acceptable
-	});
-});
-app.get('/places/:place/:stash', function(req, res, next){
-	api.getAvailableItems(req.params.place, req.params.stash, function(items){
-		res.render('pages/list', {title: 'List stash contents', place: req.params.place, stash: req.params.stash, items: items});
-	});
+app.post('/places', function(req, res, next){
+	if(req.files && req.files.length == 1 && req.files[0].fieldname == "icon"){
+		api.addPlace(req.body.name, getUploadPath(req.files[0].filename), function(result){
+			passMessage(req, result.error, result.msg, 'Added place '+req.body.name);
+			res.redirect('/places');
+		});
+	}else{
+		passMessage(req, true, "No image selected", "This should not happen");
+		res.redirect('/places');
+	}
 });
 
+/* Stashes */
+app.get('/places/:place', function(req, res, next){
+	api.getAvailableStashes(req.params.place, function(stashes){
+		res.render('pages/stashes', {title: 'Select stash', parentPath: '/places', place: req.params.place, stashes: stashes});
+	});
+});
+app.post('/places/:place', function(req, res, next){
+	if(req.files && req.files.length == 1 && req.files[0].fieldname == "icon"){
+		api.addStash(req.params.place, req.body.name, getUploadPath(req.files[0].filename), function(result){
+			passMessage(req, result.error, result.msg, 'Added stash '+req.body.name);
+			res.redirect('/places/'+req.params.place);
+		});
+	}else{
+		passMessage(req, true, "No image selected", "This should not happen");
+		res.redirect('/places/'+req.params.place);
+	}
+});
+
+/* At selected location */
+app.get('/places/:place/:stash', function(req, res, next){
+	api.getAvailableItems(req.params.place, req.params.stash, function(items){
+		res.render('pages/list', {title: 'List stash contents', parentPath: '/places/'+req.params.place, place: req.params.place, stash: req.params.stash, items: items});
+	});
+});
 app.post('/places/:place/:stash', function(req, res, next){
 	const onDone = function(result){
-		req.flash(!result.error?'msg':'error', !result.error?'Added '+result.amount+'x'+result.size+result.unit+' '+result.product+'!':result.msg);
+		passMessage(req, result.error, result.msg, 'Added '+result.amount+'x'+result.size+result.unit+' '+result.product+'!');
 		res.redirect('/places/'+req.params.place+'/'+req.params.stash);
 	};
 	
@@ -65,6 +78,7 @@ app.post('/places/:place/:stash', function(req, res, next){
 	}
 });
 
+/* Test environment */
 app.get('/barcodetest', function(req, res, next){
 	res.render('pages/barcodetest', {title: 'Barcode testing'});
 });
@@ -80,3 +94,16 @@ app.post('/barcodetest', function(req, res, test){
 httpServer.listen(1339, function(){
 	console.log("Server running at port %s", httpServer.address().port)
 });
+
+function passMessage(req, error, onError, onSuccess){
+	if(error) req.flash('error', onError);
+	else req.flash('msg', onSuccess);
+}
+
+function getRandomString(len){
+	return crypto.randomBytes(len).toString('hex')
+}
+
+function getUploadPath(filename){
+	return '/uploads/'+filename;
+}
