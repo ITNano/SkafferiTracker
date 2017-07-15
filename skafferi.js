@@ -8,11 +8,23 @@ exports.getAvailablePlaces = function(callback){
 };
 
 exports.getAvailableStashes = function(place, callback){
-	db.query("SELECT S.name, S.img FROM stashes S LEFT JOIN places P ON P.name = ? WHERE P.id = S.place_id", [place], callback);
+	db.query("SELECT count(id) AS count FROM places WHERE name = ?", [place], function(results){
+		if(results[0]["count"] > 0){
+			db.query("SELECT S.name, S.img FROM stashes S LEFT JOIN places P ON P.name = ? WHERE P.id = S.place_id", [place], callback);
+		}else{
+			callback({error: true, msg: "The given place does not exist"});
+		}
+	});
 };
 
 exports.getAvailableItems = function(place, stash, callback){
-	db.query("SELECT I.product AS product, I.manufacturer AS manufacturer, I.unit AS unit, SUM(I.size*IF(E.action = 'add', E.amount, -E.amount)) AS amount FROM events E LEFT JOIN items I ON I.id = E.item_id LEFT JOIN places P ON P.name = ? LEFT JOIN stashes S ON S.name = ? AND S.place_id = P.id WHERE E.stash_id = S.id GROUP BY I.id", [place, stash], callback);
+	db.query("SELECT count(S.id) AS count FROM stashes S LEFT JOIN places P ON P.id = S.place_id WHERE P.name = ? AND S.name = ?", [place, stash], function(results){
+		if(results[0]["count"] > 0){
+			db.query("SELECT S.name AS stash, P.name AS place, I.product AS product, I.manufacturer AS manufacturer, I.unit AS unit, SUM(I.size*IF(E.action = 'add', E.amount, -E.amount)) AS amount FROM events E LEFT JOIN items I ON I.id = E.item_id LEFT JOIN places P ON P.name = ? LEFT JOIN stashes S ON S.name = ? AND S.place_id = P.id WHERE E.stash_id = S.id GROUP BY I.id", [place, stash], callback);
+		}else{
+			callback({error: true, msg: "The given stash does not exist"});
+		}
+	});
 };
 
 exports.addPlace = function(name, imgPath, callback){

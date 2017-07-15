@@ -42,7 +42,11 @@ app.post('/places', function(req, res, next){
 /* Stashes */
 app.get('/places/:place', function(req, res, next){
 	api.getAvailableStashes(req.params.place, function(stashes){
-		res.render('pages/stashes', {title: 'Select stash', parentPath: '/places', place: req.params.place, stashes: stashes});
+		if(!stashes.error){
+			res.render('pages/stashes', {title: 'Select stash', parentPath: '/places', place: req.params.place, stashes: stashes});
+		}else{
+			res.render('pages/404', {msg: stashes.msg});
+		}
 	});
 });
 app.post('/places/:place', function(req, res, next){
@@ -60,7 +64,11 @@ app.post('/places/:place', function(req, res, next){
 /* At selected location */
 app.get('/places/:place/:stash', function(req, res, next){
 	api.getAvailableItems(req.params.place, req.params.stash, function(items){
-		res.render('pages/list', {title: 'List stash contents', parentPath: '/places/'+req.params.place, place: req.params.place, stash: req.params.stash, items: items});
+		if(!items.error){
+			res.render('pages/list', {title: 'List stash contents', parentPath: '/places/'+req.params.place, place: req.params.place, stash: req.params.stash, items: items});
+		}else{
+			res.render('pages/404', {msg: items.msg});
+		}
 	});
 });
 app.post('/places/:place/:stash', function(req, res, next){
