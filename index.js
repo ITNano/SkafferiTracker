@@ -28,13 +28,16 @@ app.get('/places', function(req, res, next){
 	});
 });
 app.post('/places', function(req, res, next){
+	req.flash('openadd', true);
 	if(req.files && req.files.length == 1 && req.files[0].fieldname == "icon"){
+		console.log('file');
 		api.addPlace(req.body.name, getUploadPath(req.files[0].filename), function(result){
+			console.log(JSON.stringify(result));
 			passMessage(req, result.error, result.msg, 'Added place '+req.body.name);
 			res.redirect('/places');
 		});
 	}else{
-		passMessage(req, true, "No image selected", "This should not happen");
+		passMessage(req, true, "No image selected");
 		res.redirect('/places');
 	}
 });
@@ -50,6 +53,7 @@ app.get('/places/:place', function(req, res, next){
 	});
 });
 app.post('/places/:place', function(req, res, next){
+	req.flash('openadd', true);
 	if(req.files && req.files.length == 1 && req.files[0].fieldname == "icon"){
 		api.addStash(req.params.place, req.body.name, getUploadPath(req.files[0].filename), function(result){
 			passMessage(req, result.error, result.msg, 'Added stash '+req.body.name);

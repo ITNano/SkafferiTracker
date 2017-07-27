@@ -2,7 +2,7 @@
 	<head>
 		<% include ../partials/head %>
 	</head>
-	<body>
+	<body <% if(messages.openadd){ %>onload = "$('#addButton').click();"<% } %>>
 		<header>
 			<% include ../partials/header %>
 		</header>
