@@ -27,6 +27,11 @@ exports.getAvailableItems = function(place, stash, callback){
 	});
 };
 
+exports.searchItemAvailability = function(searchword, callback){
+	searchword = '%'+searchword+'%';
+	db.query("SELECT S.name AS stash, P.name AS place, I.product AS product, SUM(I.size*IF(E.action = 'add', E.amount, -E.amount)) AS amount, I.unit AS unit FROM events E LEFT JOIN items I ON I.id = E.item_id LEFT JOIN stashes S ON S.id = E.stash_id LEFT JOIN places P ON P.id = S.place_id WHERE I.product LIKE ? OR I.manufacturer LIKE ? ORDER BY P.name ASC, S.name ASC", [searchword, searchword], callback);
+};
+
 exports.addPlace = function(name, imgPath, callback){
 	db.query("INSERT INTO places (id, name, img) VALUES (NULL, ?, ?)", [name, imgPath], callback);
 };

@@ -13,7 +13,6 @@ header{
 	color:#444;
 	
 	padding-left:20px;
-	line-height:40px;
 }
 main{
 	padding:50px 20px 50px 20px;
@@ -27,6 +26,7 @@ footer{
 	background-color: #f7f7f7;
 	border-top:1px solid #e6e6e6;
 	color: #444;
+	text-align:center;
 	
 	padding-left:20px;
 	line-height:40px;
@@ -41,6 +41,12 @@ input[type="number"]{
 }
 input[type="number"].large{
 	width:70px;
+}
+input[type=text].small{
+	font-size:12px;
+}
+input[type=text].long{
+	width:250px;
 }
 input[type=button],input[type=submit]{
 	display:inline-block;
@@ -134,11 +140,14 @@ label.radiobutton:hover{
 	cursor:pointer;
 }
 
+#searchbar{
+	width:12%;
+	margin-left: 15%;
+}
 
 div.iconWrapper{
 	display: inline-block;
-	width: 150px;
-	height: 200px;
+	width: 300px;
 	padding:20px 10px;
 	margin-right:50px;
 }
@@ -159,7 +168,7 @@ div.iconWrapper > div.name{
 
 #addButton{
 	position:absolute;
-	right:160px;
+	right:4%;
 	top: 70px;
 	width:50px;
 	height:50px;
@@ -214,4 +223,10 @@ div.iconWrapper > div.name{
 }
 .input-group{
 	display:block !important;
+}
+
+@media screen and (max-width: 700px){
+	#punchline{
+		display:none;
+	}
 }

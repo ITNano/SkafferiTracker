@@ -98,6 +98,15 @@ app.post('/barcodetest', function(req, res, test){
 		res.redirect('/barcodetest');
 	});
 });
+app.get('/searchtest', function(req, res, next){
+	res.render('pages/searchtest', {title: 'Search testing'});
+});
+app.post('/searchtest', function(req, res, test){
+	api.searchItemAvailability(req.body.searchword, function(result){
+		req.flash('msg', JSON.stringify(result));
+		res.redirect('/searchtest');
+	});
+});
 
 httpServer.listen(1339, function(){
 	console.log("Server running at port %s", httpServer.address().port)
