@@ -1,7 +1,6 @@
 var db = require('./db');
 db.connect('localhost', 'skafferi', 'CHANGE_THIS_TO_YOUR_PASSWORD', 'skafferi');
 var barcodes = require('./barcodes');
-var dateformat = require('dateformat');
 
 exports.getAvailablePlaces = function(callback){
 	db.query("SELECT name, img FROM places", [], callback);
@@ -67,6 +66,5 @@ exports.addEventByManual = function(place, stash, action, barcode, product, manu
 };
 
 function addEvent(place, stash, action, item_id, amount, callback){
-	var date = dateformat(new Date(), "YYYY-mm-dd HH:MM:ss");
-	db.query("INSERT INTO events (id, action, item_id, stash_id, amount, created) VALUES (NULL, ?, ?, (SELECT S.id FROM stashes S LEFT JOIN places P ON P.name = ? WHERE S.name = ? AND S.place_id = P.id), ?, ?)", [action, item_id, place, stash, amount, date], callback);
+	db.query("INSERT INTO events (id, action, item_id, stash_id, amount, created) VALUES (NULL, ?, ?, (SELECT S.id FROM stashes S LEFT JOIN places P ON P.name = ? WHERE S.name = ? AND S.place_id = P.id), ?, NOW())", [action, item_id, place, stash, amount], callback);
 }
