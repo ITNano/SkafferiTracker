@@ -4,8 +4,17 @@ Keeping track of food in your pantry (swe: skafferi).
 ## Installing dependencies
 Note before we start: I am used to Debian (more specifically Raspbian). The instructions below is written from my experience with Raspbian and might differ on other operating systems. For example, RedHat uses yum instead of apt-get. But it shouldn't differ too much.
 ### Code dependencies
-Make sure you have Node and npm installed, for more info see [Node installation page](https://docs.npmjs.com/getting-started/installing-node).
-When that is done, use ```npm install``` to setup project dependencies. This process will take around 2-10 minutes.
+#### Step 1
+Make sure you have Node and npm installed, for up-to-date info see [Node installation page](https://docs.npmjs.com/getting-started/installing-node).  
+If you are lazy, the following should probably work out:
+```
+sudo apt-get update & sudo apt-get upgrade
+sudo apt-get install nodejs npm node-semver
+sudo npm install npm@latest -g
+```
+#### Step 2
+When the installations are done, use ```npm install``` to setup project dependencies. This process will take around 2-10 minutes.
+
 ### Database dependencies
 The project uses a MySQL database which needs some "manual" setup.
 #### Step 1
@@ -30,3 +39,7 @@ Be happy! If everything goes as planned, the DB should be setup and ready to use
 ## Running the server
 To start the server, simply run ``` node index.js ```. This will run on *port 1339*.  
 If you want to specify a custom port, use ``` node index.js [portnumber] ```.
+
+## Extra utilities
+There is a tool called NodeAdmin that can be used to visualize databases and tables. A small wrapper script for this tool has been provided. In order to use it, first install nodeadmin with the command ```npm install nodeadmin```.  
+Run the utility with the command ```node dbadmin.js``` and open [your local NodeAdmin](http://localhost:1338/nodeadmin). It runs on port 1338.
