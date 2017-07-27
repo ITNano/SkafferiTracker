@@ -108,7 +108,8 @@ app.post('/searchtest', function(req, res, test){
 	});
 });
 
-httpServer.listen(1339, function(){
+var port = (process.argv.length>2?parseInt(process.argv[2]):1339);
+httpServer.listen(port, function(){
 	console.log("Server running at port %s", httpServer.address().port)
 });
 
