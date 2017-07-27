@@ -76,7 +76,7 @@ app.post('/places/:place/:stash', function(req, res, next){
 		passMessage(req, result.error, result.msg, 'Added '+result.amount+'x'+result.size+result.unit+' '+result.product+'!');
 		res.redirect('/places/'+req.params.place+'/'+req.params.stash);
 	};
-	
+	console.log(req.body.inputtype, req.params)
 	if(req.body.inputtype == "barcode"){
 		api.addEventByBarcode(req.params.place, req.params.stash, req.body.action, req.body.barcode, req.body.amount, onDone);
 	}else if(req.body.inputtype == "manual"){
