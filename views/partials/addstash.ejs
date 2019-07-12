@@ -1,0 +1,17 @@
+<% if(messages.error){ %>
+	<div class = "message error">
+		<%= messages.error %>
+	</div>
+<% } %>
+<% if(messages.msg){ %>
+	<div class = "message success">
+		<%= messages.msg %>
+	</div>
+<% } %>
+<div class = "center">
+	<form action = "#" method = "POST" enctype = "multipart/form-data">
+		<input type = "text" name = "name" placeholder = "New stash name"><br>
+		<input type="file" name = "icon" class="filestyle" data-classButton="btn btn-primary" data-input="false" data-classIcon="icon-plus" data-buttonText="Select stash icon">
+		<input type = "submit" value = "Add stash">
+	</form>
+</div>

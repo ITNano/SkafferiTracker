@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<a href = "<%= parentPath %>">
+				<div class = "button rounded clickable">
+					&#8592; Select stash
+				</div>
+			</a>
+			<h2>
+				Items @ <%= stash %> (<%= place %>)
+			</h2>
+			
+			<table>
+				<tr>
+					<th> Amount </th>
+					<th> Name </th>
+					<th> Företag </th>
+				</tr>
+				<% items.forEach(function(item){ %>
+					<tr>
+						<td><%= item.amount %> <%= item.unit %></td>
+						<td><%= item.product %></td>
+						<td><% if(item.manufacturer){ %><%= item.manufacturer %><% }else{ %>Unknown<% } %></td>
+				<% }); %>
+			</table>
+			
+			<div id = "addEvent" class = "addwindow high">
+				<% include ../partials/event.ejs %>
+			</div>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>

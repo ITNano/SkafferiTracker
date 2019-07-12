@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<% if(messages.error){ %>
+				<div class = "message error">
+					<%= messages.error %>
+				</div>
+			<% } %>
+			<% if(messages.msg){ %>
+				<div class = "message success">
+					<%= messages.msg %>
+				</div>
+			<% } %>
+			<form action = "#" method = "POST" enctype = "multipart/form-data">
+				<input type = "text" name = "name" placeholder = "New stash name">
+				<input type = "file" 
+				<input type = "submit" value = "Add stash">
+			</form>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>

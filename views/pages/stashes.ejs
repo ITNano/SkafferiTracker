@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body <% if(messages.openadd){ %>onload = "$('#addButton').click();"<% } %>>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<a href = "<%= parentPath %>">
+				<div class = "button rounded clickable">
+					&#8592; Select place
+				</div>
+			</a>
+			<div id = "addButton" class = "button round clickable" onClick = "$('#addStash').toggle();$(this).html($(this).html()=='&#10005;'?'+':'&#10005;');">
+				+
+			</div>
+			
+			<h2>
+				Stashes @ <%= place %>
+			</h2>
+			
+			<% stashes.forEach(function(stash){ %>
+				<a href = "/places/<%= place %>/<%= stash.name %>">
+					<div class = "stashWrapper iconWrapper clickable">
+						<img src = "<%= stash.img %>">
+						<div class = "name"><%= stash.name %></div>
+					</div>
+				</a>
+			<% }); %>
+			
+			<div id = "addStash" class = "addwindow hiddenwindow">
+				<% include ../partials/addstash.ejs %>
+			</div>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>

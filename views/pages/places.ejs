@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body <% if(messages.openadd){ %>onload = "$('#addButton').click();"<% } %>>
+		<header>
+			<% include ../partials/header %>
+		</header>
+		
+		<main>
+			<div id = "addButton" class = "button round clickable" onClick = "$('#addPlace').toggle();$(this).html($(this).html()=='&#10005;'?'+':'&#10005;');">
+				+
+			</div>
+			
+			<% places.forEach(function(place){ %>
+				<a href = "/places/<%= place.name %>">
+					<div class = "placeWrapper iconWrapper clickable">
+						<img src = "<%= place.img %>">
+						<div class = "name"><%= place.name %></div>
+					</div>
+				</a>
+			<% }); %>
+			
+			<div id = "addPlace" class = "addwindow hiddenwindow">
+				<% include ../partials/addplace.ejs %>
+			</div>
+		</main>
+		
+		<footer>
+			<% include ../partials/footer %>
+		</footer>
+	</body>
+</html>
